@@ -5,7 +5,7 @@ from typing import cast
 from urllib3 import HTTPResponse
 from plotly import graph_objects as go
 import pandas as pd
-import talib
+# import talib
 import numpy as np
 
 client = RESTClient(config.API_KEY)
@@ -50,18 +50,18 @@ for bar in rawData:
 
 closeList = np.array(closeList)
 
-upper, middle, lower = talib.BBANDS(closeList, timeperiod = 20, nbdevdn = 2, matype = 0)
-print(upper)
+# upper, middle, lower = talib.BBANDS(closeList, timeperiod = 20, nbdevdn = 2, matype = 0)
+# print(upper)
 
-# times = []
-# for time in timeList:
-#     times.append(pd.Timestamp(time, tz = 'GMT', unit = 'ms'))
+times = []
+for time in timeList:
+    times.append(pd.Timestamp(time, tz = 'GMT', unit = 'ms'))
 
-# fig = go.Figure()
-# fig.add_trace(go.Candlestick(x=times, open=openList, high=hightList, low=lowList, close=closeList, name = 'Apple Market Data'))
+fig = go.Figure()
+fig.add_trace(go.Candlestick(x=times, open=openList, high=hightList, low=lowList, close=closeList, name = 'Apple Market Data'))
 # # fig.add_trace(go.Bar(x=times, volume=volumeList))
-# fig.update_layout(xaxis_rangeslider_visible=False)
+fig.update_layout(xaxis_rangeslider_visible=False, template = "plotly_dark")
 
-# fig.show()
-            
+fig.show()
+
 
