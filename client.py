@@ -7,8 +7,13 @@ from plotly import graph_objects as go
 import pandas as pd
 # import talib
 import numpy as np
+from pymongo import MongoClient
 
 client = RESTClient(config.API_KEY)
+
+mongo_client = MongoClient("mongodb://localhost:27017/") 
+db = mongo_client['stock_db']
+collection = db['apple_aggs']
 
 aggs = cast(
     HTTPResponse,
@@ -31,7 +36,7 @@ for item in data:
 
 closeList = []
 openList = []
-hightList = []
+highList = []
 lowList = []
 timeList = []
 
@@ -40,7 +45,7 @@ for bar in rawData:
         if category == 'c':
             closeList.append(bar[category])
         elif category == 'h':
-            hightList.append(bar[category])
+            highList.append(bar[category])
         elif category == 'l':
             lowList.append(bar[category])
         elif category == 'o':
@@ -57,11 +62,22 @@ times = []
 for time in timeList:
     times.append(pd.Timestamp(time, tz = 'GMT', unit = 'ms'))
 
-fig = go.Figure()
-fig.add_trace(go.Candlestick(x=times, open=openList, high=hightList, low=lowList, close=closeList, name = 'Apple Market Data'))
-# # fig.add_trace(go.Bar(x=times, volume=volumeList))
-fig.update_layout(xaxis_rangeslider_visible=False, template = "plotly_dark")
+for i in range(len(timeList)):
+    record = {
+        "ticker": "AAPL",
+        "date": pd.Timestamp(timeList[i], tz='GMT', unit='ms').strftime('%Y-%m-%d %H:%M:%S'),
+        "open": openList[i],
+        "high": highList[i],
+        "low": lowList[i],
+        "close": closeList[i]
+    }
+    collection.insert_one(record)
 
-fig.show()
+# fig = go.Figure()
+# fig.add_trace(go.Candlestick(x=times, open=openList, high=highList, low=lowList, close=closeList, name = 'Apple Market Data'))
+# # # fig.add_trace(go.Bar(x=times, volume=volumeList))
+# fig.update_layout(xaxis_rangeslider_visible=False, template = "plotly_dark")
+
+# fig.show()
 
 
