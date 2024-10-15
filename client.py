@@ -73,11 +73,9 @@ for i in range(len(timeList)):
     }
     collection.insert_one(record)
 
-# fig = go.Figure()
-# fig.add_trace(go.Candlestick(x=times, open=openList, high=highList, low=lowList, close=closeList, name = 'Apple Market Data'))
-# # # fig.add_trace(go.Bar(x=times, volume=volumeList))
-# fig.update_layout(xaxis_rangeslider_visible=False, template = "plotly_dark")
+fig = go.Figure()
+fig.add_trace(go.Candlestick(x=times, open=openList, high=highList, low=lowList, close=closeList, name = 'Apple Market Data'))
+# # fig.add_trace(go.Bar(x=times, volume=volumeList))
+fig.update_layout(xaxis_rangeslider_visible=False, template = "plotly_dark")
 
-# fig.show()
-
-
+fig.show()
